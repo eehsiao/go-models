@@ -8,11 +8,6 @@ import (
 	"strings"
 )
 
-// const TableFieldTag
-const (
-	TableFieldTag = "TbField"
-)
-
 // Struct4Scan : transfer struct to slice for scan
 func Struct4Scan(s interface{}) (r []interface{}) {
 	if s != nil {
@@ -39,6 +34,7 @@ func Struce4Query(r reflect.Type) (s string) {
 	return
 }
 
+// Serialize : transfer object to string, the object's members must be public
 func Serialize(i interface{}) (serialString string, err error) {
 	bytes, err := json.Marshal(i)
 	serialString = string(bytes)

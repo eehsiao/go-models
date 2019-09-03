@@ -39,6 +39,16 @@ func (dao *Dao) Close() {
 	dao.Db.Close()
 }
 
+// SetMaxOpenConns : Set max connections pool
+func (dao *Dao) SetMaxOpenConns(max int) {
+	dao.Db.SetMaxOpenConns(max)
+}
+
+// SetMaxIdleConns : Set min connections pool
+func (dao *Dao) SetMaxIdleConns(idle int) {
+	dao.Db.SetMaxIdleConns(idle)
+}
+
 // Exec : execute a sql query via Dao
 func (dao *Dao) Exec(query string, args ...interface{}) (sql.Result, error) {
 	return dao.Db.Exec(query, args...)
