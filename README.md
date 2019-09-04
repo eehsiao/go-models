@@ -59,7 +59,8 @@ redDao := redis.NewRedis(redis.NewOptions("127.0.0.1:6379", "", 0))
 
 ## Example
 ### 1 build-in
-`github.com/eehsiao/go-models/example/example.go`
+[example.go](https://github.com/eehsiao/go-models/blob/master/example/example.go)
+
 The example will connect to local mysql and get user data.
 Then connect to local redis and set user data, and get back.
 
@@ -72,6 +73,7 @@ How to design model data logical
 ### MySQL
 #### 1.
 create a table struct, and add the tag `TbField:"real table filed"`
+
 `TbField` the tag is musted. `read table filed` also be same the table field.
 ```go
 type UserTb struct {
