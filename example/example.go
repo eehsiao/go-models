@@ -69,12 +69,11 @@ func main() {
 			panic(err.Error())
 		}
 
-		for _, u := range users {
-			var redKey = u.Host + u.User
+		for k, _ := range keyValues {
 			// HGet is github.com/go-redis/redis map to orgin redis command
-			if rel, err = redUserModel.HGet(userTable, redKey).Result(); err == nil {
+			if rel, err = redUserModel.HGet(userTable, k).Result(); err == nil {
 				if err = json.Unmarshal([]byte(rel), &user); err == nil {
-					stdLog.Println(fmt.Sprintf("%s : %v", redKey, user))
+					stdLog.Println(fmt.Sprintf("%s : %v", k, user))
 				}
 			}
 		}
