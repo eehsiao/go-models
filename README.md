@@ -72,6 +72,7 @@ How to design model data logical
 ### MySQL
 #### 1.
 create a table struct, and add the tag `TbField:"real table filed"`
+`TbField` the tag is musted. `read table filed` also be same the table field.
 ```go
 type UserTb struct {
 	Host       sql.NullString `TbField:"Host"`
