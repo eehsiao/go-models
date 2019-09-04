@@ -64,6 +64,7 @@ func main() {
 				}
 			}
 		}
+		// UserHMSet is a data logical function , write by yourself
 		if status, err = redUserModel.UserHMSet(userTable, keyValues); err != nil {
 			panic(err.Error())
 		}
