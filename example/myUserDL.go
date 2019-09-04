@@ -14,10 +14,12 @@ const (
 	userTable = "user"
 )
 
+// MyUserDao : extend from mysql.Dao
 type MyUserDao struct {
 	*mysql.Dao
 }
 
+// UserTb : sql table struct that to store into mysql
 type UserTb struct {
 	Host       sql.NullString `TbField:"Host"`
 	User       sql.NullString `TbField:"User"`
