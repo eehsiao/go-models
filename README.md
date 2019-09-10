@@ -7,7 +7,8 @@ And easy way to build your data logical layer for access redis.
 
 This is a easy way to access data from database. That you focus on data processing logical.
 Now support MySQL, MariaDB, Redis
-TODO: PostgreSQL, MSSQL, Mongodb, ...
+TODO support: PostgreSQL, MSSQL, Mongodb, ...
+TODO feature: sqlbuilder
 
 ---------------------------------------
   * [Features](#features)
@@ -104,8 +105,6 @@ scan the sql result to the struct of object
 userTb := UserTb{}
 err = rows.Scan(lib.Struct4Scan(&userTb)...)
 ```
-
-TODO : sqlbuilder
 
 ### Redis
 #### 1.
