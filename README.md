@@ -1,5 +1,9 @@
 # go-models
-golang data object models for mysql, redis ....
+`go-models` its lite and easy model.
+
+That is querybuilder with data object models for SQLs.
+And easy way to build your data logical layer for access redis.
+
 
 This is a easy way to access data from database. That you focus on data processing logical.
 Now support MySQL, MariaDB, Redis
@@ -45,11 +49,17 @@ import (
 )
 
 //new mysql dao
-c := mysql.NewConfig("user", "pwd", "127.0.0.1", "mysql")
-myDao, err := mysql.NewMysql(c)
+myDao := mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB()
+//register a struct for model
+myDao.RegisterModel((*UserTb)(nil), "user")
+// call model's GetAll() , get all rows in user table
+users, err = myDao.GetAll()
+
 
 //new redis dao
-redDao := redis.NewRedis(redis.NewOptions("127.0.0.1:6379", "", 0))
+redDao := redis.NewDao().SetConfig("127.0.0.1:6379", "", 0).OpenDB()
+//register a struct for model
+RegisterModel((*User)(nil), "user")
 ```
 ### Lib
     lib.Iif : is a inline IF-ELSE logic

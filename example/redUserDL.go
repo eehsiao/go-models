@@ -3,6 +3,8 @@
 package main
 
 import (
+	"encoding/json"
+
 	"github.com/eehsiao/go-models/redis"
 )
 
@@ -20,9 +22,20 @@ type User struct {
 
 // UserHMSet : this is a data logical function, you can write more logical in there
 // sample function of the data logical
-func (r *RedUserModel) UserHMSet(hKey string, kv map[string]interface{}) (status string, err error) {
+func (r *RedUserModel) UserHMSet(kv map[string]interface{}) (status string, err error) {
 	if kv != nil && len(kv) > 0 {
-		return r.HMSet(hKey, kv).Result()
+		return r.HMSet(r.DataKey, kv).Result()
+	}
+
+	return
+}
+
+// UserHMSet : this is a data logical function, you can write more logical in there
+// sample function of the data logical
+func (r *RedUserModel) UserHGet(hkey string) (user User, err error) {
+	var rel string
+	if rel, err = r.HGet(r.DataKey, hkey).Result(); err == nil {
+		err = json.Unmarshal([]byte(rel), &user)
 	}
 
 	return
