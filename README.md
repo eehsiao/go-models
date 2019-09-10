@@ -114,8 +114,8 @@ create a data struct, and add the tag `json:"name"`
 type User struct {
 	Host       string `json:"host"`
 	User       string `json:"user"`
-    SelectPriv string `json:"select_priv"`
-    IntVal     int    `json:"user,string"`
+	SelectPriv string `json:"select_priv"`
+	IntVal     int    `json:"user,string"`
 }
 ```
 
