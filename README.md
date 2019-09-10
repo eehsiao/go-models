@@ -74,7 +74,7 @@ RegisterModel((*User)(nil), "user")
 The example will connect to local mysql and get user data.
 Then connect to local redis and set user data, and get back.
 
-### 2 real exam
+### 2 exam
 `https://github.com/eehsiao/go-models-exam/`
 
 
@@ -95,8 +95,8 @@ type UserTb struct {
 #### 2.
 use Struce4Query to gen the sql select fields
 ```go
-	selSQL := "SELECT " + lib.Struce4Query(reflect.TypeOf(UserTb{}))
-	selSQL += " FROM " + userTable
+selSQL := "SELECT " + lib.Struce4Query(reflect.TypeOf(UserTb{}))
+selSQL += " FROM " + userTable
 ```
 #### 3.
 scan the sql result to the struct of object
@@ -104,6 +104,8 @@ scan the sql result to the struct of object
 userTb := UserTb{}
 err = rows.Scan(lib.Struct4Scan(&userTb)...)
 ```
+
+TODO : sqlbuilder
 
 ### Redis
 #### 1.
