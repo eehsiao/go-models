@@ -32,7 +32,7 @@ func (r *RedUserModel) UserHMSet(kv map[string]interface{}) (status string, err 
 
 // UserHMSet : this is a data logical function, you can write more logical in there
 // sample function of the data logical
-func (r *RedUserModel) UserHGet(hkey string) (user User, err error) {
+func (r *RedUserModel) UserHGet(hkey string) (user *User, err error) {
 	var rel string
 	if rel, err = r.HGet(r.DataKey, hkey).Result(); err == nil {
 		err = json.Unmarshal([]byte(rel), &user)

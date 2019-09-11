@@ -13,8 +13,8 @@ import (
 var (
 	myDao     *mysql.Dao
 	redDao    *redis.Dao
-	users     []User
-	user      User
+	users     []*User
+	user      *User
 	serialStr string
 	keyValues = make(map[string]interface{})
 	status    string
@@ -27,16 +27,22 @@ func main() {
 		Dao: mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB(),
 	}
 
-	if err = myUserDao.RegisterModel((*UserTb)(nil), "user"); err != nil {
+	if err = myUserDao.SetDefaultModel((*UserTb)(nil), "user"); err != nil {
 		panic(err.Error())
 	}
 
+	if user, err = myUserDao.GetFirstUser(); err == nil {
+		fmt.Println("GetFirstUser", user)
+	}
+
 	if users, err = myUserDao.GetUsers(); len(users) > 0 {
+		fmt.Println("GetUsers", users)
+
 		redUserModel := &RedUserModel{
 			Dao: redis.NewDao().SetConfig("127.0.0.1:6379", "", 0).OpenDB(),
 		}
 
-		if err = redUserModel.RegisterModel((*User)(nil), "user"); err != nil {
+		if err = redUserModel.SetDefaultModel((*User)(nil), "user"); err != nil {
 			panic(err.Error())
 		}
 
@@ -60,7 +66,7 @@ func main() {
 			// UserHGet is a data logical function
 			// its a multiple HGet to call HMSet, write in redUserDL data logical
 			if user, err = redUserModel.UserHGet(k); err == nil {
-				fmt.Println(fmt.Sprintf("%s : %v", k, user))
+				fmt.Println(fmt.Sprintf("UserHGet : %s = %v", k, user))
 			}
 		}
 	}

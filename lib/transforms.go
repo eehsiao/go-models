@@ -34,6 +34,17 @@ func Struce4Query(r reflect.Type) (s string) {
 	return
 }
 
+// Struce4Query : transfer struct to string for query
+func Struce4QuerySlice(r reflect.Type) (s []string) {
+	if r != nil && r.NumField() > 0 {
+		for i := 0; i < r.NumField(); i++ {
+			s = append(s, r.Field(i).Tag.Get(TableFieldTag))
+		}
+	}
+
+	return
+}
+
 // Serialize : transfer object to string, the object's members must be public
 func Serialize(i interface{}) (serialString string, err error) {
 	bytes, err := json.Marshal(i)

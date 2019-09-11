@@ -21,17 +21,15 @@ func NewDao() *Dao {
 	return &Dao{}
 }
 
-// RegisterModel : register a table struct for this dao
-func (dao *Dao) RegisterModel(tb interface{}, deftultDataKey string) (err error) {
+// SetDefaultModel : register a table struct for this dao
+func (dao *Dao) SetDefaultModel(tb interface{}, deftultDataKey string) (err error) {
 	structType := reflect.TypeOf(tb).Elem()
 	if db == nil || cfg == nil {
 		err = errors.New("Do NewConfig() and NewDb() first !!")
 	}
 
-	dao.Client = db
 	dao.DaoStruct = structType.Name()
 	dao.DaoStructType = structType
-	dao.DbNnum = getConfig().DB
 	dao.DataKey = deftultDataKey
 
 	return
@@ -59,6 +57,9 @@ func (dao *Dao) OpenDB() *Dao {
 	if _, err := openDB(); err != nil {
 		panic("cannot connect to db")
 	}
+	dao.Client = db
+	dao.DbNnum = getConfig().DB
+
 	return dao
 }
 

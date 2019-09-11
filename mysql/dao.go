@@ -8,12 +8,14 @@ import (
 	"reflect"
 
 	"github.com/eehsiao/go-models/lib"
+	"github.com/eehsiao/go-models/sqlbuilder"
 	"github.com/go-sql-driver/mysql"
 )
 
 // Dao : the data access object struct
 type Dao struct {
 	*sql.DB
+	*sqlbuilder.SQLBuilder
 	DaoStruct     string
 	DaoStructType reflect.Type
 	DbName        string
@@ -22,20 +24,20 @@ type Dao struct {
 
 // NewDao : create a new empty Dao
 func NewDao() *Dao {
-	return &Dao{}
+	return &Dao{
+		SQLBuilder: sqlbuilder.NewSQLBuilder(),
+	}
 }
 
-// RegisterModel : register a table struct for this dao
-func (dao *Dao) RegisterModel(tb interface{}, deftultTbName string) (err error) {
+// SetDefaultModel : set the struct for this dao default
+func (dao *Dao) SetDefaultModel(tb interface{}, deftultTbName string) (err error) {
 	structType := reflect.TypeOf(tb).Elem()
 	if db == nil || cfg == nil {
 		err = errors.New("Do NewConfig() and NewDb() first !!")
 	}
 
-	dao.DB = db
 	dao.DaoStruct = structType.Name()
 	dao.DaoStructType = structType
-	dao.DbName = getConfig().DBName
 	dao.TbName = deftultTbName
 
 	return
@@ -63,6 +65,9 @@ func (dao *Dao) OpenDB() *Dao {
 	if _, err := openDB(); err != nil {
 		panic("cannot connect to db")
 	}
+	dao.DB = db
+	dao.DbName = getConfig().DBName
+
 	return dao
 }
 
@@ -75,35 +80,63 @@ func (dao *Dao) OpenDBWithPoolConns(active, idle int) *Dao {
 
 }
 
-func (dao *Dao) GetAll() (t []interface{}, err error) {
-	selSQL := "SELECT " + lib.Struce4Query(dao.DaoStructType)
-	selSQL += " FROM " + dao.DbName + "." + dao.TbName
-
-	var rows *sql.Rows
-	if rows, err = dao.Query(selSQL); err == nil {
-		for rows.Next() {
-			gTb := reflect.New(dao.DaoStructType).Interface()
-			if err = rows.Scan(lib.Struct4Scan(gTb)...); err == nil {
-				t = append(t, gTb)
-			}
+func (dao *Dao) ScanType(rows *sql.Rows, tb interface{}) (t []interface{}, err error) {
+	for rows.Next() {
+		gTb := reflect.New(reflect.TypeOf(tb).Elem()).Interface()
+		if err = rows.Scan(lib.Struct4Scan(gTb)...); err == nil {
+			t = append(t, gTb)
 		}
 	}
-	rows.Close()
 
 	return
 }
 
-func (dao *Dao) GetRow() (t interface{}, err error) {
-	selSQL := "SELECT " + lib.Struce4Query(dao.DaoStructType)
-	selSQL += " FROM " + dao.DbName + "." + dao.TbName
-
-	var rows *sql.Rows
-	if rows, err = dao.Query(selSQL); err == nil {
+func (dao *Dao) Scan(rows *sql.Rows) (t []interface{}, err error) {
+	for rows.Next() {
 		gTb := reflect.New(dao.DaoStructType).Interface()
-		err = rows.Scan(lib.Struct4Scan(gTb)...)
-		t = gTb
+		if err = rows.Scan(lib.Struct4Scan(gTb)...); err == nil {
+			t = append(t, gTb)
+		}
 	}
-	rows.Close()
+
+	return
+}
+
+func (dao *Dao) ScanRowType(row *sql.Row, tb interface{}) (t interface{}, err error) {
+	t = reflect.New(reflect.TypeOf(tb).Elem()).Interface()
+	err = row.Scan(lib.Struct4Scan(t)...)
+
+	return
+}
+
+func (dao *Dao) ScanRow(row *sql.Row) (t interface{}, err error) {
+	t = reflect.New(dao.DaoStructType).Interface()
+	err = row.Scan(lib.Struct4Scan(t)...)
+
+	return
+}
+
+func (dao *Dao) Get() (rows *sql.Rows, err error) {
+	if !dao.CanBuildSelect() {
+		return nil, errors.New("cannot select")
+	}
+	rows, err = dao.Query(dao.BuildSelectSQL())
+
+	//reset sqlbuilder
+	dao.ClearBuilder()
+
+	return
+}
+
+func (dao *Dao) GetRow() (row *sql.Row, err error) {
+	if !dao.CanBuildSelect() {
+		return nil, errors.New("cannot select")
+	}
+
+	row = dao.QueryRow(dao.BuildSelectSQL())
+
+	//reset sqlbuilder
+	dao.ClearBuilder()
 
 	return
 }

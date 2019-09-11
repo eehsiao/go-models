@@ -16,7 +16,7 @@ var (
 
 // SetConfig : create and set mysql config via go-models
 // addr : can with port number. ex: '127.0.0.1:3306', if u want to use default port, just use ip addr ex: '127.0.0.1'
-func setConfig(user, pw, addr, db string) {
+func setConfig(user, pw, addr, dbname string) {
 	if cfg != nil {
 		panic("already had config !!")
 	}
@@ -25,7 +25,7 @@ func setConfig(user, pw, addr, db string) {
 	cfg.User = user
 	cfg.Passwd = pw
 	cfg.Addr = addr
-	cfg.DBName = db
+	cfg.DBName = dbname
 
 }
 

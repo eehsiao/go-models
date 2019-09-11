@@ -2,12 +2,16 @@
 `go-models` its lite and easy model.
 
 That is querybuilder with data object models for SQLs.
+
 And easy way to build your data logical layer for access redis.
 
 
 This is a easy way to access data from database. That you focus on data processing logical.
+
 Now support MySQL, MariaDB, Redis
+
 TODO support: PostgreSQL, MSSQL, Mongodb, ...
+
 TODO feature: sqlbuilder
 
 ---------------------------------------
@@ -49,10 +53,18 @@ import (
 	"github.com/eehsiao/go-models/redis"
 )
 
+type UserTb struct {
+	Host       sql.NullString `TbField:"Host"`
+	User       sql.NullString `TbField:"User"`
+	SelectPriv sql.NullString `TbField:"Select_priv"`
+}
+
 //new mysql dao
 myDao := mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB()
+
 //register a struct for model
 myDao.RegisterModel((*UserTb)(nil), "user")
+
 // call model's GetAll() , get all rows in user table
 users, err = myDao.GetAll()
 
