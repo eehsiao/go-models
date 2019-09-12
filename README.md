@@ -1,18 +1,12 @@
 # go-models
 `go-models` its lite and easy model.
 
-That is querybuilder with data object models for SQLs.
+    That is querybuilder with data object models for SQLs.
+    And easy way to build your data logical layer for access redis.
+    This is a easy way to access data from database. That you focus on data processing logical.
+    Now support MySQL, MariaDB, Redis
 
-And easy way to build your data logical layer for access redis.
-
-
-This is a easy way to access data from database. That you focus on data processing logical.
-
-Now support MySQL, MariaDB, Redis
-
-TODO support: PostgreSQL, MSSQL, Mongodb, ...
-
-TODO feature: sqlbuilder
+    TODO support: PostgreSQL, MSSQL, SQLite Mongodb, ...
 
 ---------------------------------------
   * [Features](#features)
@@ -20,6 +14,7 @@ TODO feature: sqlbuilder
   * [Docker](#docker)
   * [Usage](#usage)
     * [Lib](#lib)
+    * [SqlBuilder](#sqlbuilder)
     * [Example](#example)
     * [How-to](#how-to)
         * [MySQL](#mysql)
@@ -48,37 +43,85 @@ $ docker-compose up -d
 ## Usage
 ```go
 import (
+    "database/sql"
+	"fmt"
+
 	"github.com/eehsiao/go-models/lib"
 	"github.com/eehsiao/go-models/mysql"
 	"github.com/eehsiao/go-models/redis"
 )
 
+// UserTb : sql table struct that to store into mysql
 type UserTb struct {
 	Host       sql.NullString `TbField:"Host"`
 	User       sql.NullString `TbField:"User"`
 	SelectPriv sql.NullString `TbField:"Select_priv"`
 }
 
+// User : json struct that to store into redis
+type User struct {
+	Host       string `json:"host"`
+	User       string `json:"user"`
+	SelectPriv string `json:"select_priv"`
+}
+
 //new mysql dao
-myDao := mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB()
+myUserDao := &MyUserDao{
+    Dao: mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB(),
+}
 
-//register a struct for model
-myDao.RegisterModel((*UserTb)(nil), "user")
+// example 1 : directly use the sqlbuilder
+myUserDao.Select("Host", "User", "Select_priv").From("user").Where("User='root'").Limit(1)
+fmt.Println("sqlbuilder", myUserDao.BuildSelectSQL())
+if row, err = myUserDao.GetRow(); err == nil {
+    if val, err = myUserDao.ScanRowType(row, (*UserTb)(nil)); err == nil {
+        u, _ := val.(*UserTb)
+        fmt.Println("UserTb", u)
+    }
+}
+    
+// set a struct for dao as default model (option)
+// (*UserTb)(nil) : nil pointer of the UserTb struct
+// "user" : is real table name in the db
+myUserDao.SetDefaultModel((*UserTb)(nil), "user")
 
-// call model's GetAll() , get all rows in user table
-users, err = myDao.GetAll()
+// call model's Get() , get all rows in user table
+// return (rows *sql.Rows, err error)
+rows, err = myDao.Get()
+
+// call model's GetRow() , get first row in user rows
+// return (row *sql.Row, err error)
+row, err = myDao.GetRow()
 
 
 //new redis dao
-redDao := redis.NewDao().SetConfig("127.0.0.1:6379", "", 0).OpenDB()
-//register a struct for model
-RegisterModel((*User)(nil), "user")
+redUserModel := &RedUserModel{
+    Dao: redis.NewDao().SetConfig("127.0.0.1:6379", "", 0).OpenDB(),
+}
+
+// set a struct for dao as default model (option)
+// (*User)(nil) : nil pointer of the User struct
+// "user" : is real table name in the db
+SetDefaultModel((*User)(nil), "user")
 ```
 ### Lib
     lib.Iif : is a inline IF-ELSE logic
     lib.Struct4Scan : transfer a object struct to poiter slces, that easy to scan the sql results.
     lib.Struce4Query : transfer a struct to a string for sql select fields. ex "idx, name".
+    Struce4QuerySlice : transfer a struct to a []string slice.
     lib.Serialize : serialize a object to a json string.
+
+### SqlBuilder
+    sqlbuilder its recursive call function
+    ex: dao.Select().From().Join().Where().Limit()
+
+#### SqlBuilder functions
+##### Select and Delete Builder
+  * Select(parms ...string) (*dao)
+    * parms : its sql fields that you want to query
+  * From(parms ...string) (*dao)
+##### Insert Builder
+##### Update Builder
 
 ## Example
 ### 1 build-in
@@ -106,16 +149,19 @@ type UserTb struct {
 }
 ```
 #### 2.
-use Struce4Query to gen the sql select fields
+use Struce4QuerySlice to gen the sqlbuilder select fields
 ```go
-selSQL := "SELECT " + lib.Struce4Query(reflect.TypeOf(UserTb{}))
-selSQL += " FROM " + userTable
+m := mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB()
+m.Select(lib.Struce4QuerySlice(m.DaoStructType)...).From(m.TbName).Limit(3)
 ```
 #### 3.
 scan the sql result to the struct of object
 ```go
-userTb := UserTb{}
-err = rows.Scan(lib.Struct4Scan(&userTb)...)
+row, err = m.GetRow()
+if val, err = m.ScanRowType(row, (*UserTb)(nil)); err == nil {
+    u, _ := val.(*UserTb)
+    fmt.Println("UserTb", u)
+}
 ```
 
 ### Redis
@@ -132,3 +178,15 @@ type User struct {
 
 if you have integer value, you can add a transfer type desc.
 such as json:"user,`string`"
+
+#### 2.
+create redis dao
+```go
+m := redis.NewDao().SetConfig("127.0.0.1:6379", "", 0).OpenDB()
+```
+
+#### 3.
+directly use the go-redis command function
+```go
+redBool, err = m.HSet(userTable, redKey, serialStr).Result()
+```

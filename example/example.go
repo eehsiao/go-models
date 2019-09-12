@@ -3,6 +3,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/eehsiao/go-models/lib"
@@ -20,6 +21,8 @@ var (
 	status    string
 	err       error
 	redBool   bool
+	val       interface{}
+	row       *sql.Row
 )
 
 func main() {
@@ -27,6 +30,22 @@ func main() {
 		Dao: mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB(),
 	}
 
+	myUserDao.Set(map[string]interface{}{"foo": 1, "bar": "2"}).From("user")
+	fmt.Println("sqlbuilder", myUserDao.BuildUpdateSQL().BuildedSQL())
+
+	// example 1 : directly use the sqlbuilder
+	myUserDao.Select("Host", "User", "Select_priv").From("user").Where("User='root'").Limit(1)
+	if row, err = myUserDao.GetRow(); err == nil {
+		if val, err = myUserDao.ScanRowType(row, (*UserTb)(nil)); err == nil {
+			u, _ := val.(*UserTb)
+			fmt.Println("UserTb", u)
+		}
+	}
+
+	// example 2 : use the data logical
+	// set a struct for dao as default model (option)
+	// (*UserTb)(nil) : nil pointer of the UserTb struct
+	// "user" : is real table name in the db
 	if err = myUserDao.SetDefaultModel((*UserTb)(nil), "user"); err != nil {
 		panic(err.Error())
 	}

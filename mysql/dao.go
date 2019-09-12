@@ -16,10 +16,9 @@ import (
 type Dao struct {
 	*sql.DB
 	*sqlbuilder.SQLBuilder
+
 	DaoStruct     string
 	DaoStructType reflect.Type
-	DbName        string
-	TbName        string
 }
 
 // NewDao : create a new empty Dao
@@ -38,7 +37,7 @@ func (dao *Dao) SetDefaultModel(tb interface{}, deftultTbName string) (err error
 
 	dao.DaoStruct = structType.Name()
 	dao.DaoStructType = structType
-	dao.TbName = deftultTbName
+	dao.SetTbName(deftultTbName)
 
 	return
 }
@@ -51,22 +50,24 @@ func (dao *Dao) GetConfig() *mysql.Config {
 // SetConfig : set config by user, pw, addr, db
 func (dao *Dao) SetConfig(user, pw, addr, db string) *Dao {
 	setConfig(user, pw, addr, db)
+
 	return dao
 }
 
 // SetOriginConfig : set config by mysql.Config
 func (dao *Dao) SetOriginConfig(c *mysql.Config) *Dao {
 	setOriginConfig(c)
+
 	return dao
 }
 
 // OpenDB : connect to db
 func (dao *Dao) OpenDB() *Dao {
 	if _, err := openDB(); err != nil {
-		panic("cannot connect to db")
+		dao.PanicOrErrorLog("cannot connect to db")
 	}
 	dao.DB = db
-	dao.DbName = getConfig().DBName
+	dao.SetDbName(getConfig().DBName)
 
 	return dao
 }
@@ -74,7 +75,7 @@ func (dao *Dao) OpenDB() *Dao {
 // OpenDBWithPoolConns : connect to db and set pool conns
 func (dao *Dao) OpenDBWithPoolConns(active, idle int) *Dao {
 	if _, err := openDBWithPoolConns(active, idle); err != nil {
-		panic("cannot connect to db")
+		dao.PanicOrErrorLog("cannot connect to db")
 	}
 	return dao
 
@@ -120,7 +121,7 @@ func (dao *Dao) Get() (rows *sql.Rows, err error) {
 	if !dao.CanBuildSelect() {
 		return nil, errors.New("cannot select")
 	}
-	rows, err = dao.Query(dao.BuildSelectSQL())
+	rows, err = dao.Query(dao.BuildedSQL())
 
 	//reset sqlbuilder
 	dao.ClearBuilder()
@@ -133,7 +134,55 @@ func (dao *Dao) GetRow() (row *sql.Row, err error) {
 		return nil, errors.New("cannot select")
 	}
 
-	row = dao.QueryRow(dao.BuildSelectSQL())
+	row = dao.QueryRow(dao.BuildedSQL())
+
+	//reset sqlbuilder
+	dao.ClearBuilder()
+
+	return
+}
+
+func (dao *Dao) Update(s string) (r sql.Result, err error) {
+	if s != "" {
+		dao.FromOne(s)
+	}
+	if !dao.CanBuildUpdate() {
+		return nil, errors.New("cannot update")
+	}
+
+	r, err = dao.Exec(dao.BuildedSQL())
+
+	//reset sqlbuilder
+	dao.ClearBuilder()
+
+	return
+}
+
+func (dao *Dao) Insert(s string) (r sql.Result, err error) {
+	if s != "" {
+		dao.Into(s)
+	}
+	if !dao.CanBuildInsert() {
+		return nil, errors.New("cannot insert")
+	}
+
+	r, err = dao.Exec(dao.BuildedSQL())
+
+	//reset sqlbuilder
+	dao.ClearBuilder()
+
+	return
+}
+
+func (dao *Dao) Delete(s string) (r sql.Result, err error) {
+	if s != "" {
+		dao.FromOne(s)
+	}
+	if !dao.CanBuildDelete() {
+		return nil, errors.New("cannot insert")
+	}
+
+	r, err = dao.Exec(dao.BuildedSQL())
 
 	//reset sqlbuilder
 	dao.ClearBuilder()

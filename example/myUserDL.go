@@ -4,6 +4,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/eehsiao/go-models/lib"
 	"github.com/eehsiao/go-models/mysql"
@@ -30,7 +31,7 @@ type UserTb struct {
 func (m *MyUserDao) GetFirstUser() (user *User, err error) {
 
 	m.Select("Host", "User", "Select_priv").From("user").Limit(1)
-
+	fmt.Println("GetFirstUser", m.BuildSelectSQL().BuildedSQL())
 	var (
 		val interface{}
 		row *sql.Row
@@ -56,8 +57,8 @@ func (m *MyUserDao) GetFirstUser() (user *User, err error) {
 // sample data logical function to get the all users
 func (m *MyUserDao) GetUsers() (users []*User, err error) {
 
-	m.Select(lib.Struce4QuerySlice(m.DaoStructType)...).From(m.TbName).Limit(3)
-
+	m.Select(lib.Struce4QuerySlice(m.DaoStructType)...).From(m.GetTbName()).Limit(3)
+	fmt.Println("GetUsers", m.BuildSelectSQL().BuildedSQL())
 	var (
 		vals []interface{}
 		rows *sql.Rows
@@ -76,9 +77,9 @@ func (m *MyUserDao) GetUsers() (users []*User, err error) {
 				users = append(users, user)
 			}
 		}
+		rows.Close()
 	}
-	vals = nil
-	rows.Close()
+	rows, vals = nil, nil
 
 	return
 }
