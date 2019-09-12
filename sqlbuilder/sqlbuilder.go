@@ -295,7 +295,7 @@ func (sb *SQLBuilder) BuildUpdateSQL() *SQLBuilder {
 		sql += sb.tbName + " "
 	}
 
-	setStr := ""
+	setStr := "SET "
 	for k, v := range sb.sets {
 		switch v.(type) {
 		case string:
