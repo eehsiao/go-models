@@ -1,6 +1,6 @@
 // Author :		Eric<eehsiao@gmail.com>
 
-package mysql
+package lib
 
 import (
 	"encoding/json"

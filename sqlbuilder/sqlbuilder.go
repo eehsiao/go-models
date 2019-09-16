@@ -8,6 +8,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/eehsiao/go-models/lib"
 )
 
 var (
@@ -42,14 +44,6 @@ type SQLBuilder struct {
 
 	// for update
 	sets map[string]interface{}
-}
-
-// iif logical condition
-func iif(l bool, a interface{}, b interface{}) interface{} {
-	if l {
-		return a
-	}
-	return b
 }
 
 func NewSQLBuilder() (b *SQLBuilder) {
@@ -251,7 +245,7 @@ func (sb *SQLBuilder) BuildSelectSQL() *SQLBuilder {
 		sb.PanicOrErrorLog("Without selects or from table is not set")
 	}
 
-	sql := "SELECT" + iif(sb.IsDistinct(), " DISTINCT", "").(string)
+	sql := "SELECT" + lib.Iif(sb.IsDistinct(), " DISTINCT", "").(string)
 
 	if sb.IsHasTop() {
 		sql += " TOP " + sb.top

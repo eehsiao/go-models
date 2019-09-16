@@ -1,6 +1,6 @@
 // Author :		Eric<eehsiao@gmail.com>
 
-package mysql
+package lib
 
 // Iif logical condition
 func Iif(l bool, a interface{}, b interface{}) interface{} {

@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/eehsiao/go-models/lib"
 	"github.com/eehsiao/go-models/mysql"
 )
 
@@ -41,9 +42,9 @@ func (m *MyUserDao) GetFirstUser() (user *User, err error) {
 			u, _ := val.(*UserTb)
 
 			user = &User{
-				Host:       mysql.Iif(u.Host.Valid, u.Host.String, "").(string),
-				User:       mysql.Iif(u.User.Valid, u.User.String, "").(string),
-				SelectPriv: mysql.Iif(u.SelectPriv.Valid, u.SelectPriv.String, "").(string),
+				Host:       lib.Iif(u.Host.Valid, u.Host.String, "").(string),
+				User:       lib.Iif(u.User.Valid, u.User.String, "").(string),
+				SelectPriv: lib.Iif(u.SelectPriv.Valid, u.SelectPriv.String, "").(string),
 			}
 		}
 	}
@@ -56,7 +57,7 @@ func (m *MyUserDao) GetFirstUser() (user *User, err error) {
 // sample data logical function to get the all users
 func (m *MyUserDao) GetUsers() (users []*User, err error) {
 
-	m.Select(mysql.Struce4QuerySlice(m.DaoStructType)...).From(m.GetTbName()).Limit(3)
+	m.Select(lib.Struce4QuerySlice(m.DaoStructType)...).From(m.GetTbName()).Limit(3)
 	fmt.Println("GetUsers", m.BuildSelectSQL().BuildedSQL())
 	var (
 		vals []interface{}
@@ -69,9 +70,9 @@ func (m *MyUserDao) GetUsers() (users []*User, err error) {
 				u, _ := v.(*UserTb)
 
 				user := &User{
-					Host:       mysql.Iif(u.Host.Valid, u.Host.String, "").(string),
-					User:       mysql.Iif(u.User.Valid, u.User.String, "").(string),
-					SelectPriv: mysql.Iif(u.SelectPriv.Valid, u.SelectPriv.String, "").(string),
+					Host:       lib.Iif(u.Host.Valid, u.Host.String, "").(string),
+					User:       lib.Iif(u.User.Valid, u.User.String, "").(string),
+					SelectPriv: lib.Iif(u.SelectPriv.Valid, u.SelectPriv.String, "").(string),
 				}
 				users = append(users, user)
 			}

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"reflect"
 
+	"github.com/eehsiao/go-models/lib"
 	"github.com/eehsiao/go-models/sqlbuilder"
 	"github.com/go-sql-driver/mysql"
 )
@@ -83,7 +84,7 @@ func (dao *Dao) OpenDBWithPoolConns(active, idle int) *Dao {
 func (dao *Dao) ScanType(rows *sql.Rows, tb interface{}) (t []interface{}, err error) {
 	for rows.Next() {
 		gTb := reflect.New(reflect.TypeOf(tb).Elem()).Interface()
-		if err = rows.Scan(Struct4Scan(gTb)...); err == nil {
+		if err = rows.Scan(lib.Struct4Scan(gTb)...); err == nil {
 			t = append(t, gTb)
 		}
 	}
@@ -94,7 +95,7 @@ func (dao *Dao) ScanType(rows *sql.Rows, tb interface{}) (t []interface{}, err e
 func (dao *Dao) Scan(rows *sql.Rows) (t []interface{}, err error) {
 	for rows.Next() {
 		gTb := reflect.New(dao.DaoStructType).Interface()
-		if err = rows.Scan(Struct4Scan(gTb)...); err == nil {
+		if err = rows.Scan(lib.Struct4Scan(gTb)...); err == nil {
 			t = append(t, gTb)
 		}
 	}
@@ -104,14 +105,14 @@ func (dao *Dao) Scan(rows *sql.Rows) (t []interface{}, err error) {
 
 func (dao *Dao) ScanRowType(row *sql.Row, tb interface{}) (t interface{}, err error) {
 	t = reflect.New(reflect.TypeOf(tb).Elem()).Interface()
-	err = row.Scan(Struct4Scan(t)...)
+	err = row.Scan(lib.Struct4Scan(t)...)
 
 	return
 }
 
 func (dao *Dao) ScanRow(row *sql.Row) (t interface{}, err error) {
 	t = reflect.New(dao.DaoStructType).Interface()
-	err = row.Scan(Struct4Scan(t)...)
+	err = row.Scan(lib.Struct4Scan(t)...)
 
 	return
 }
