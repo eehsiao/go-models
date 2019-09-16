@@ -2,9 +2,9 @@
 `go-models` its lite and easy model.
 
 ---------------------------------------
-  * [Go-Module](#go-module)
   * [Features](#features)
   * [Requirements](#requirements)
+  * [Go-Module](#go-module)
   * [Docker](#docker)
   * [Usage](#usage)
     * [Lib](#lib)
@@ -13,6 +13,21 @@
     * [How-to](#how-to)
         * [MySQL](#mysql)
         * [Redis](#redis)
+
+
+## Features
+    That is querybuilder with data object models for SQLs.
+    And easy way to build your data logical layer for access redis.
+    This is a easy way to access data from database. That you focus on data processing logical.
+    Now support MySQL, MariaDB, Redis
+
+    TODO support: PostgreSQL, MSSQL, SQLite Mongodb, ...
+
+## Requirements
+    * Go 1.12 or higher.
+    * [database/sql](https://golang.org/pkg/database/sql/) package
+    * [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql) package
+    * [go-redis/redis](https://github.com/go-redis/redis) package
 
 ## Go-Module
 create `go.mod` file in your package folder, and fill below
@@ -30,26 +45,6 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 )
 
-```
-
-## Features
-    That is querybuilder with data object models for SQLs.
-    And easy way to build your data logical layer for access redis.
-    This is a easy way to access data from database. That you focus on data processing logical.
-    Now support MySQL, MariaDB, Redis
-
-    TODO support: PostgreSQL, MSSQL, SQLite Mongodb, ...
-
-## Requirements
-    * Go 1.12 or higher.
-    * [database/sql](https://golang.org/pkg/database/sql/) package
-    * [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql) package
-    * [go-redis/redis](https://github.com/go-redis/redis) package
-
-## Installation
-Easy install the package to your GOPATH from shell:
-```bash
-$ go get -u github.com/eehsiao/go-models
 ```
 
 ## Docker
