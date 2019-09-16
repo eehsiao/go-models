@@ -1,14 +1,8 @@
 # go-models
 `go-models` its lite and easy model.
 
-    That is querybuilder with data object models for SQLs.
-    And easy way to build your data logical layer for access redis.
-    This is a easy way to access data from database. That you focus on data processing logical.
-    Now support MySQL, MariaDB, Redis
-
-    TODO support: PostgreSQL, MSSQL, SQLite Mongodb, ...
-
 ---------------------------------------
+  * [Go-Module](#go-module)
   * [Features](#features)
   * [Requirements](#requirements)
   * [Docker](#docker)
@@ -20,7 +14,31 @@
         * [MySQL](#mysql)
         * [Redis](#redis)
 
+## Go-Module
+create `go.mod` file in your package folder, and fill below
+```
+module github.com/eehsiao/go-models-example
+
+go 1.13
+
+require (
+	github.com/eehsiao/go-models/lib latest
+	github.com/eehsiao/go-models/mysql latest
+	github.com/eehsiao/go-models/redis latest
+	github.com/eehsiao/go-models/sqlbuilder latest
+	github.com/go-redis/redis v6.15.5+incompatible
+	github.com/go-sql-driver/mysql v1.4.1
+)
+
+```
+
 ## Features
+    That is querybuilder with data object models for SQLs.
+    And easy way to build your data logical layer for access redis.
+    This is a easy way to access data from database. That you focus on data processing logical.
+    Now support MySQL, MariaDB, Redis
+
+    TODO support: PostgreSQL, MSSQL, SQLite Mongodb, ...
 
 ## Requirements
     * Go 1.12 or higher.
@@ -159,8 +177,8 @@ ex: dao.Select().From().Join().Where().Limit()
 The example will connect to local mysql and get user data.
 Then connect to local redis and set user data, and get back.
 
-### 2 exam
-`https://github.com/eehsiao/go-models-exam/`
+### 2 example
+`https://github.com/eehsiao/go-models-example/`
 
 
 ## How-to 
