@@ -1,4 +1,4 @@
-module github.com/eehsiao/go-models/sqlbuilder
+module github.com/eehsiao/go-models
 
 go 1.12
 
