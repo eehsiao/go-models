@@ -1,4 +1,4 @@
-module github.com/eehsiao/go-models
+module github.com/eehsiao/go-models/redis
 
 go 1.12
 
