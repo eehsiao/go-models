@@ -3,7 +3,7 @@ module github.com/eehsiao/go-models
 go 1.12
 
 require (
-	github.com/eehsiao/go-models/lib v0.0.1
+	github.com/eehsiao/go-models/lib v0.0.0-20190916032851-cbc471a88312
 	github.com/eehsiao/go-models/mysql v0.0.0-20190916032851-cbc471a88312
 	github.com/eehsiao/go-models/redis v0.0.0-20190916032851-cbc471a88312
 	github.com/eehsiao/go-models/sqlbuilder v0.0.0-20190916032851-cbc471a88312
