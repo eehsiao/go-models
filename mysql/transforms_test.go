@@ -1,6 +1,6 @@
 // Author :		Eric<eehsiao@gmail.com>
 
-package lib
+package mysql
 
 import (
 	"database/sql"

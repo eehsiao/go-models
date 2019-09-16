@@ -37,7 +37,6 @@ module github.com/eehsiao/go-models-example
 go 1.13
 
 require (
-	github.com/eehsiao/go-models/lib latest
 	github.com/eehsiao/go-models/mysql latest
 	github.com/eehsiao/go-models/redis latest
 	github.com/eehsiao/go-models/sqlbuilder latest
@@ -59,7 +58,6 @@ import (
     "database/sql"
 	"fmt"
 
-	"github.com/eehsiao/go-models/lib"
 	"github.com/eehsiao/go-models/mysql"
 	"github.com/eehsiao/go-models/redis"
 )
