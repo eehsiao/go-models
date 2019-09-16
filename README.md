@@ -112,16 +112,45 @@ SetDefaultModel((*User)(nil), "user")
     lib.Serialize : serialize a object to a json string.
 
 ### SqlBuilder
-    sqlbuilder its recursive call function
-    ex: dao.Select().From().Join().Where().Limit()
+sqlbuilder its recursive call function, that you can easy to build sql string
 
+ex: dao.Select().From().Join().Where().Limit()
 #### SqlBuilder functions
-##### Select and Delete Builder
-  * Select(parms ...string) (*dao)
-    * parms : its sql fields that you want to query
-  * From(parms ...string) (*dao)
-##### Insert Builder
-##### Update Builder
+* build select :
+    * Select(s ...string)
+    * Distinct(b bool)
+    * Top(i int)
+    * From(s ...string)
+    * Where(s string)
+    * WhereAnd(s ...string)
+    * WhereOr(s ...string)
+    * Join(s string, c string)
+    * InnerJoin(s string, c string)
+    * LeftJoin(s string, c string)
+    * RightJoin(s string, c string)
+    * FullJoin(s string, c string)
+    * GroupBy(s ...string)
+    * OrderBy(s ...string)
+    * OrderByAsc(s ...string)
+    * OrderByDesc(s ...string)
+    * Having(s string)
+    * BuildSelectSQL()
+* build update :
+    * Set(s map[string]interface{})
+    * FromOne(s string)
+    * BuildUpdateSQL()
+* build insert : 
+    * Into(s string)
+    * Fields(s ...string)
+    * Values(s ...[]interface{})
+    * BuildInsertSQL()
+* build delete :
+    * BuildDeleteSQL()
+* common :
+    * ClearBuilder()
+    * BuildedSQL()
+    * SetDbName(s string)
+    * SetTbName(s string)
 
 ## Example
 ### 1 build-in

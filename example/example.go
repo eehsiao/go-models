@@ -30,10 +30,12 @@ func main() {
 		Dao: mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB(),
 	}
 
-	myUserDao.Set(map[string]interface{}{"foo": 1, "bar": "2"}).From("user")
+	// example 1 : use sql builder
+	sets := map[string]interface{}{"foo": 1, "bar": "2", "test": true}
+	myUserDao.Set(sets).From("user").Where("abc=1")
 	fmt.Println("sqlbuilder", myUserDao.BuildUpdateSQL().BuildedSQL())
 
-	// example 1 : directly use the sqlbuilder
+	// example 2 : directly use the sqlbuilder
 	myUserDao.Select("Host", "User", "Select_priv").From("user").Where("User='root'").Limit(1)
 	if row, err = myUserDao.GetRow(); err == nil {
 		if val, err = myUserDao.ScanRowType(row, (*UserTb)(nil)); err == nil {
@@ -42,7 +44,7 @@ func main() {
 		}
 	}
 
-	// example 2 : use the data logical
+	// example 3 : use the data logical
 	// set a struct for dao as default model (option)
 	// (*UserTb)(nil) : nil pointer of the UserTb struct
 	// "user" : is real table name in the db
