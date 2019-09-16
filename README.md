@@ -164,6 +164,8 @@ ex: dao.Select().From().Join().Where().Limit()
     * BuildedSQL()
     * SetDbName(s string)
     * SetTbName(s string)
+    * SwitchPanicToErrorLog(b bool)
+    * PanicOrErrorLog(s string)
 
 ## Example
 ### 1 build-in
