@@ -209,6 +209,10 @@ func (sb *SQLBuilder) IsHasSets() bool {
 	return len(sb.sets) > 0
 }
 
+func (sb *SQLBuilder) IsHadBuildedSQL() bool {
+	return sb.buildedStr != ""
+}
+
 func (sb *SQLBuilder) GetFieldsCount() int {
 	return len(sb.fields)
 }

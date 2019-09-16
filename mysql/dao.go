@@ -118,9 +118,13 @@ func (dao *Dao) ScanRow(row *sql.Row) (t interface{}, err error) {
 }
 
 func (dao *Dao) Get() (rows *sql.Rows, err error) {
-	if !dao.CanBuildSelect() {
-		return nil, errors.New("cannot select")
+	if !dao.IsHadBuildedSQL() {
+		if !dao.CanBuildSelect() {
+			return nil, errors.New("cannot select")
+		}
+		dao.BuildSelectSQL()
 	}
+
 	rows, err = dao.Query(dao.BuildedSQL())
 
 	//reset sqlbuilder
@@ -130,8 +134,11 @@ func (dao *Dao) Get() (rows *sql.Rows, err error) {
 }
 
 func (dao *Dao) GetRow() (row *sql.Row, err error) {
-	if !dao.CanBuildSelect() {
-		return nil, errors.New("cannot select")
+	if !dao.IsHadBuildedSQL() {
+		if !dao.CanBuildSelect() {
+			return nil, errors.New("cannot select")
+		}
+		dao.BuildSelectSQL()
 	}
 
 	row = dao.QueryRow(dao.BuildedSQL())
