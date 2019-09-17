@@ -16,3 +16,4 @@
 .DS_Store?
 .Trashes
 Thumbs.db
+go.sum

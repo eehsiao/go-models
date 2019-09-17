@@ -5,7 +5,7 @@ package main
 import (
 	"encoding/json"
 
-	"github.com/eehsiao/go-models/redis"
+	redis "github.com/eehsiao/go-models-redis"
 )
 
 // RedUserModel : extend from redis.Dao

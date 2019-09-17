@@ -6,9 +6,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/eehsiao/go-models/lib"
-	"github.com/eehsiao/go-models/mysql"
-	"github.com/eehsiao/go-models/redis"
+	lib "github.com/eehsiao/go-models-lib"
+	mysql "github.com/eehsiao/go-models-mysql"
+	redis "github.com/eehsiao/go-models-redis"
 )
 
 var (

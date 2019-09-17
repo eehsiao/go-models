@@ -1,5 +1,11 @@
 # go-models
-`go-models` its lite and easy model.
+`go-models` its lite and easy model. This repo just a example like [go-modules-example](https://github.com/eehsiao/go-models-example/)
+
+modules list as :
+  * [go-models-lib](https://github.com/eehsiao/go-models-lib)
+  * [go-models-mysql](https://github.com/eehsiao/go-models-mysql)
+  * [go-models-redis](https://github.com/eehsiao/go-models-redis)
+  * [sqlbuilder](https://github.com/eehsiao/sqlbuilder)
 
 ---------------------------------------
   * [Features](#features)
@@ -37,9 +43,10 @@ module github.com/eehsiao/go-models-example
 go 1.13
 
 require (
-	github.com/eehsiao/go-models/mysql latest
-	github.com/eehsiao/go-models/redis latest
-	github.com/eehsiao/go-models/sqlbuilder latest
+	github.com/eehsiao/go-models-lib latest
+	github.com/eehsiao/go-models-mysql latest
+	github.com/eehsiao/go-models-redis latest
+	github.com/eehsiao/sqlbuilder latest
 	github.com/go-redis/redis v6.15.5+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 )
@@ -58,8 +65,8 @@ import (
     "database/sql"
 	"fmt"
 
-	"github.com/eehsiao/go-models/mysql"
-	"github.com/eehsiao/go-models/redis"
+	mysql "github.com/eehsiao/go-models-mysql"
+	redis "github.com/eehsiao/go-models-redis"
 )
 
 // UserTb : sql table struct that to store into mysql

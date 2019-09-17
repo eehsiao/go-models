@@ -1,6 +1,0 @@
-github.com/eehsiao/go-models/lib v0.0.0-20190916070222-80dd6ccd2d77 h1:J7csJsPH6QtMYxeJlWoNH60i7dcx7ZpbB8UfdkBUi+M=
-github.com/eehsiao/go-models/lib v0.0.0-20190916070222-80dd6ccd2d77/go.mod h1:YxyK+B7g80bN/Ipl6XbtgrJxhg9yOdeGKIbULz3glfk=
-github.com/eehsiao/go-models/sqlbuilder v0.0.0-20190916083412-99e09061e334 h1:2CMHAUoNkEKpMyodHYuNnM6sx3e2mZYbrANmfX+dKA0=
-github.com/eehsiao/go-models/sqlbuilder v0.0.0-20190916083412-99e09061e334/go.mod h1:WuhSSTqm/aWQPdwV+pBpo39DwS3x0Hd9tTdFCBkAHDA=
-github.com/go-sql-driver/mysql v1.4.1 h1:g24URVg0OFbNUTx9qqY1IRZ9D9z3iPyi5zKhQZpNwpA=
-github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=

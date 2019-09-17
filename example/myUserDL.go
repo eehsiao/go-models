@@ -6,8 +6,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/eehsiao/go-models/lib"
-	"github.com/eehsiao/go-models/mysql"
+	lib "github.com/eehsiao/go-models-lib"
+	mysql "github.com/eehsiao/go-models-mysql"
 )
 
 const (
