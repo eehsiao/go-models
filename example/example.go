@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	lib "github.com/eehsiao/go-models-lib"
+	model "github.com/eehsiao/go-models"
 	mysql "github.com/eehsiao/go-models-mysql"
 	redis "github.com/eehsiao/go-models-redis"
 )
@@ -27,8 +27,9 @@ var (
 
 func main() {
 	myUserDao := &MyUserDao{
-		Dao: mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB(),
+		Dao: mysql.NewDao(),
 	}
+	myUserDao.SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB()
 
 	// example 1 : use sql builder
 	sets := map[string]interface{}{"foo": 1, "bar": "2", "test": true}
@@ -68,7 +69,7 @@ func main() {
 		}
 
 		for _, u := range users {
-			if serialStr, err = lib.Serialize(u); err == nil {
+			if serialStr, err = model.Serialize(u); err == nil {
 				redKey := u.Host + u.User
 				keyValues[redKey] = serialStr
 				// HSet is github.com/go-redis/redis original command
