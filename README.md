@@ -2,7 +2,6 @@
 `go-models` its lite and easy model. This repo just a example like [go-modules-example](https://github.com/eehsiao/go-models-example/)
 
 modules list as :
-  * [go-models-lib](https://github.com/eehsiao/go-models-lib)
   * [go-models-mysql](https://github.com/eehsiao/go-models-mysql)
   * [go-models-redis](https://github.com/eehsiao/go-models-redis)
   * [sqlbuilder](https://github.com/eehsiao/sqlbuilder)
@@ -13,7 +12,6 @@ modules list as :
   * [Go-Module](#go-module)
   * [Docker](#docker)
   * [Usage](#usage)
-    * [Lib](#lib)
     * [SqlBuilder](#sqlbuilder)
     * [Example](#example)
     * [How-to](#how-to)
@@ -88,7 +86,6 @@ module github.com/eehsiao/go-models-example
 go 1.13
 
 require (
-	github.com/eehsiao/go-models-lib latest
 	github.com/eehsiao/go-models-mysql latest
 	github.com/eehsiao/go-models-redis latest
 	github.com/eehsiao/sqlbuilder latest
@@ -167,12 +164,6 @@ redUserModel := &RedUserModel{
 // "user" : is real table name in the db
 SetDefaultModel((*User)(nil), "user")
 ```
-### Lib
-    lib.Iif : is a inline IF-ELSE logic
-    lib.Struct4Scan : transfer a object struct to poiter slces, that easy to scan the sql results.
-    lib.Struce4Query : transfer a struct to a string for sql select fields. ex "idx, name".
-    lib.Struce4QuerySlice : transfer a struct to a []string slice.
-    lib.Serialize : serialize a object to a json string.
 
 ### SqlBuilder
 sqlbuilder its recursive call function, that you can easy to build sql string
@@ -246,7 +237,7 @@ type UserTb struct {
 use Struce4QuerySlice to gen the sqlbuilder select fields
 ```go
 m := mysql.NewDao().SetConfig("root", "mYaDmin", "127.0.0.1:3306", "mysql").OpenDB()
-m.Select(lib.Struce4QuerySlice(m.DaoStructType)...).From(m.TbName).Limit(3)
+m.Select(model.Struce4QuerySlice(m.DaoStructType)...).From(m.TbName).Limit(3)
 ```
 #### 3.
 scan the sql result to the struct of object
