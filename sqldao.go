@@ -7,7 +7,7 @@ import (
 	"errors"
 	"reflect"
 
-	sqlbuilder "github.com/eehsiao/sqlbuilder"
+	"github.com/eehsiao/sqlbuilder"
 )
 
 // Dao : the data access object struct
