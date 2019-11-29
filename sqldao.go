@@ -102,11 +102,14 @@ func (dao *SqlDao) GetRow() (row *sql.Row, err error) {
 }
 
 func (dao *SqlDao) Update(s string) (r sql.Result, err error) {
-	if s != "" {
-		dao.FromOne(s)
-	}
-	if !dao.CanBuildUpdate() {
-		return nil, errors.New("cannot update")
+	if !dao.IsHadBuildedSQL() {
+		if s != "" {
+			dao.FromOne(s)
+		}
+		if !dao.CanBuildUpdate() {
+			return nil, errors.New("cannot update")
+		}
+		dao.BuildUpdateSQL()
 	}
 
 	r, err = dao.Exec(dao.BuildedSQL())
@@ -118,11 +121,14 @@ func (dao *SqlDao) Update(s string) (r sql.Result, err error) {
 }
 
 func (dao *SqlDao) Insert(s string) (r sql.Result, err error) {
-	if s != "" {
-		dao.Into(s)
-	}
-	if !dao.CanBuildInsert() {
-		return nil, errors.New("cannot insert")
+	if !dao.IsHadBuildedSQL() {
+		if s != "" {
+			dao.Into(s)
+		}
+		if !dao.CanBuildInsert() {
+			return nil, errors.New("cannot insert")
+		}
+		dao.BuildInsertSQL()
 	}
 
 	r, err = dao.Exec(dao.BuildedSQL())
@@ -134,11 +140,14 @@ func (dao *SqlDao) Insert(s string) (r sql.Result, err error) {
 }
 
 func (dao *SqlDao) Delete(s string) (r sql.Result, err error) {
-	if s != "" {
-		dao.FromOne(s)
-	}
-	if !dao.CanBuildDelete() {
-		return nil, errors.New("cannot insert")
+	if !dao.IsHadBuildedSQL() {
+		if s != "" {
+			dao.FromOne(s)
+		}
+		if !dao.CanBuildDelete() {
+			return nil, errors.New("cannot insert")
+		}
+		dao.BuildDeleteSQL()
 	}
 
 	r, err = dao.Exec(dao.BuildedSQL())
