@@ -183,13 +183,41 @@ func TestInst2Set(t *testing.T) {
 				r:    tbTest{Idx: 1, Name: sql.NullString{"test", true}},
 				wout: []string{},
 			},
-			wantS: []sb.Set{{"idx", 1}, {"name", "test"}},
+			wantS: []sb.Set{{"idx", int64(1)}, {"name", "test"}},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if gotS := Inst2Set(tt.args.r, tt.args.wout...); !reflect.DeepEqual(gotS, tt.wantS) {
 				t.Errorf("Inst2Set() = %v, want %v", gotS, tt.wantS)
+			}
+		})
+	}
+}
+
+func TestInst2FieldWout(t *testing.T) {
+	type args struct {
+		r    interface{}
+		wout []string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		wantR []string
+	}{
+		{
+			name: "case 1",
+			args: args{
+				r:    tbTest{},
+				wout: []string{"idx"},
+			},
+			wantR: []string{"name"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotR := Inst2FieldWout(tt.args.r, tt.args.wout...); !reflect.DeepEqual(gotR, tt.wantR) {
+				t.Errorf("Inst2FieldWout() = %v, want %v", gotR, tt.wantR)
 			}
 		})
 	}

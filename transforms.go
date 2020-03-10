@@ -76,6 +76,30 @@ func Inst2FieldWithoutID(t interface{}) (s []string) {
 	return
 }
 
+// Struce4Query : transfer struct to string for query
+func Inst2FieldWout(t interface{}, wout ...string) (s []string) {
+	r := reflect.TypeOf(t)
+	if r != nil && r.NumField() > 0 {
+		for i := 0; i < r.NumField(); i++ {
+			f := r.Field(i).Tag.Get(TableFieldTag)
+
+			brk := true
+			for _, w := range wout {
+				if f == w {
+					brk = false
+					continue
+				}
+			}
+			if brk {
+				s = append(s, f)
+
+			}
+		}
+	}
+
+	return
+}
+
 // Serialize : transfer object to string, the object's members must be public
 func Serialize(i interface{}) (serialString string, err error) {
 	bytes, err := json.Marshal(i)
@@ -116,7 +140,7 @@ func Inst2Set(t interface{}, wout ...string) (s []sb.Set) {
 			brk = true
 			for _, w := range wout {
 				if f == w {
-					brk = true
+					brk = false
 					continue
 				}
 			}
