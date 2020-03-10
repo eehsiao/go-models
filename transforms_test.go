@@ -222,3 +222,39 @@ func TestInst2FieldWout(t *testing.T) {
 		})
 	}
 }
+
+func TestInst2Values(t *testing.T) {
+	type args struct {
+		r    interface{}
+		wout []string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		wantS []interface{}
+	}{
+		{
+			name: "case 1",
+			args: args{
+				r:    tbTest{Idx: 1, Name: sql.NullString{"test", true}},
+				wout: []string{},
+			},
+			wantS: []interface{}{int64(1), "test"},
+		},
+		{
+			name: "case 1",
+			args: args{
+				r:    tbTest{Idx: 1, Name: sql.NullString{"test", true}},
+				wout: []string{"idx"},
+			},
+			wantS: []interface{}{"test"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotS := Inst2Values(tt.args.r, tt.args.wout...); !reflect.DeepEqual(gotS, tt.wantS) {
+				t.Errorf("Inst2Values() = %v, want %v", gotS, tt.wantS)
+			}
+		})
+	}
+}

@@ -61,6 +61,51 @@ func Inst2Fields(t interface{}) (s []string) {
 	return
 }
 
+func Inst2Values(t interface{}, wout ...string) (s []interface{}) {
+	r := reflect.TypeOf(t)
+	rv := reflect.ValueOf(t)
+	if r != nil && r.NumField() > 0 {
+		for i := 0; i < r.NumField(); i++ {
+			var (
+				f   string
+				v   interface{}
+				brk bool
+			)
+			f = r.Field(i).Tag.Get(TableFieldTag)
+			v = rv.Field(i).Interface()
+
+			fmt.Println(reflect.TypeOf(v).Name())
+			switch strings.ReplaceAll(reflect.TypeOf(v).Name(), "sql.", "") {
+			case "NullBool":
+				v = Iif(v.(sql.NullBool).Valid, v.(sql.NullBool).Bool, nil)
+			case "NullString":
+				v = Iif(v.(sql.NullString).Valid, v.(sql.NullString).String, nil)
+			case "NullFloat64":
+				v = Iif(v.(sql.NullFloat64).Valid, v.(sql.NullFloat64).Float64, nil)
+			case "NullInt32":
+				v = Iif(v.(sql.NullInt32).Valid, v.(sql.NullInt32).Int32, nil)
+			case "NullInt64":
+				v = Iif(v.(sql.NullInt64).Valid, v.(sql.NullInt64).Int64, nil)
+			case "NullTime":
+				v = Iif(v.(sql.NullTime).Valid, v.(sql.NullTime).Time, nil)
+			}
+
+			brk = true
+			for _, w := range wout {
+				if f == w {
+					brk = false
+					continue
+				}
+			}
+			if brk {
+				s = append(s, v)
+			}
+		}
+	}
+
+	return
+}
+
 // Struce4Query : transfer struct to string for query
 func Inst2FieldWithoutID(t interface{}) (s []string) {
 	r := reflect.TypeOf(t)
