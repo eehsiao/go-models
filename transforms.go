@@ -5,7 +5,6 @@ package model
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"reflect"
 	"strings"
 
@@ -74,7 +73,6 @@ func Inst2Values(t interface{}, wout ...string) (s []interface{}) {
 			f = r.Field(i).Tag.Get(TableFieldTag)
 			v = rv.Field(i).Interface()
 
-			fmt.Println(reflect.TypeOf(v).Name())
 			switch strings.ReplaceAll(reflect.TypeOf(v).Name(), "sql.", "") {
 			case "NullBool":
 				v = Iif(v.(sql.NullBool).Valid, v.(sql.NullBool).Bool, nil)
@@ -166,7 +164,6 @@ func Inst2Set(t interface{}, wout ...string) (s []sb.Set) {
 			f = r.Field(i).Tag.Get(TableFieldTag)
 			v = rv.Field(i).Interface()
 
-			fmt.Println(reflect.TypeOf(v).Name())
 			switch strings.ReplaceAll(reflect.TypeOf(v).Name(), "sql.", "") {
 			case "NullBool":
 				v = Iif(v.(sql.NullBool).Valid, v.(sql.NullBool).Bool, nil)
