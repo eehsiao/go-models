@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"reflect"
 	"testing"
+
+	sb "github.com/eehsiao/sqlbuilder"
 )
 
 type tbTest struct {
@@ -108,6 +110,86 @@ func TestSerialize(t *testing.T) {
 			}
 			if gotSerialString != tt.wantSerialString {
 				t.Errorf("Serialize() = %v, want %v", gotSerialString, tt.wantSerialString)
+			}
+		})
+	}
+}
+
+func TestInst2Fields(t *testing.T) {
+	type args struct {
+		r interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		wantR []string
+	}{
+		{
+			name: "case 1",
+			args: args{
+				r: tbTest{},
+			},
+			wantR: []string{"idx", "name"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotR := Inst2Fields(tt.args.r); !reflect.DeepEqual(gotR, tt.wantR) {
+				t.Errorf("Inst2Fields() = %v, want %v", gotR, tt.wantR)
+			}
+		})
+	}
+}
+
+func TestInst2FieldWithoutID(t *testing.T) {
+	type args struct {
+		r interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		wantR []string
+	}{
+		{
+			name: "case 1",
+			args: args{
+				r: tbTest{},
+			},
+			wantR: []string{"name"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotR := Inst2FieldWithoutID(tt.args.r); !reflect.DeepEqual(gotR, tt.wantR) {
+				t.Errorf("Inst2FieldWithoutID() = %v, want %v", gotR, tt.wantR)
+			}
+		})
+	}
+}
+
+func TestInst2Set(t *testing.T) {
+	type args struct {
+		r    interface{}
+		wout []string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		wantS []sb.Set
+	}{
+		{
+			name: "case 1",
+			args: args{
+				r:    tbTest{Idx: 1, Name: sql.NullString{"test", true}},
+				wout: []string{},
+			},
+			wantS: []sb.Set{{"idx", 1}, {"name", "test"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotS := Inst2Set(tt.args.r, tt.args.wout...); !reflect.DeepEqual(gotS, tt.wantS) {
+				t.Errorf("Inst2Set() = %v, want %v", gotS, tt.wantS)
 			}
 		})
 	}
