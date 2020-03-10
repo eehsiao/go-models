@@ -242,12 +242,20 @@ func TestInst2Values(t *testing.T) {
 			wantS: []interface{}{int64(1), "test"},
 		},
 		{
-			name: "case 1",
+			name: "case 2",
 			args: args{
 				r:    tbTest{Idx: 1, Name: sql.NullString{"test", true}},
 				wout: []string{"idx"},
 			},
 			wantS: []interface{}{"test"},
+		},
+		{
+			name: "case 3",
+			args: args{
+				r:    tbTest{Idx: 1, Name: sql.NullString{"test", true}},
+				wout: []string{"name"},
+			},
+			wantS: []interface{}{int64(1)},
 		},
 	}
 	for _, tt := range tests {
